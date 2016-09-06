@@ -2,7 +2,6 @@
 import urllib2
 import urllib
 import json
-from xml import etree
 
 
 headers = {'User-Agent':"Mozilla/5.0 (Windows NT 10.0; WOW64; rv:47.0) Gecko/20100101 Firefox/47.0"}
@@ -17,7 +16,7 @@ class ChangeUrl(object):
         self.long_url = long_url
         self.short_url = short_url
 
-    def getbaiduUrl(self,request):
+    def getUrlUseBaidu(self,request):
         response = urllib2.urlopen(request)
         response_dict = json.loads(response.read())
         if response_dict["status"] != 0:
@@ -36,7 +35,7 @@ class ChangeUrl(object):
             self.long_url = long_url
         data = urllib.urlencode({'url': self.long_url})
         request = urllib2.Request("http://dwz.cn/create.php", data=data, headers=headers)
-        return self.getbaiduUrl(request)
+        return self.getUrlUseBaidu(request)
 
     def baiduUrlShortToLong(self,short_url=0):
         """
@@ -46,7 +45,7 @@ class ChangeUrl(object):
             self.short_url = short_url
         data = urllib.urlencode({'tinyurl': self.short_url})
         request = urllib2.Request("http://dwz.cn/query.php", data=data, headers=headers)
-        return self.getbaiduUrl(request)
+        return self.getUrlUseBaidu(request)
 
 
 if __name__ == "__main__":
