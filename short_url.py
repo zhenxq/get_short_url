@@ -16,9 +16,8 @@ headers = {'User-Agent':"Mozilla/5.0 (Windows NT 10.0; WOW64; rv:47.0) Gecko/201
 
 class ChangeUrl(object):
     """
-    Baidu:
-        get short url
-        also you can use short url to get origin long url
+    Baidu Sina:
+        get short url or long url
     """
     def __init__(self,long_url=0,short_url=0):
         self.long_url = long_url
@@ -41,7 +40,7 @@ class ChangeUrl(object):
 
     def baiduUrlLongToShort(self,long_url=0):
         """
-        :return: short_url or (err_msg,error_message)
+        :return: return baidu short_url or (err_msg,error_message)
         """
         if long_url:
             self.long_url = long_url
@@ -51,7 +50,7 @@ class ChangeUrl(object):
 
     def baiduUrlShortToLong(self,short_url=0):
         """
-        :return: long_url or (err_msg,error_message)
+        :return: return baidu long_url or (err_msg,error_message)
         """
         if short_url:
             self.short_url = short_url
@@ -61,7 +60,7 @@ class ChangeUrl(object):
 
     def sinaUrlLongToShort(self,long_url=0):
         """
-        :return: return short url or None (if Exception)
+        :return: return sina short url or None (if try except)
         """
         if long_url:
             self.long_url = long_url
@@ -75,12 +74,28 @@ class ChangeUrl(object):
         except Exception as e:
             print(e)
 
+    def sinaUrlShortToLong(self, short_url=0):
+        """
+        :return: return sina long url or None (if try except )
+        """
+        if short_url:
+            self.short_url = short_url
+        try:
+            url = "http://api.t.sina.com.cn/short_url/expand.json?source=3271760578&url_short=" + self.short_url
+            request = Request(url)
+            response = urlopen(request, timeout=5)
+            response_dict = json.loads(response.read().decode("utf-8"))[0]
+            return response_dict["url_long"]
+        except Exception as e:
+            print(e)
 
 if __name__ == "__main__":
     change_url = ChangeUrl()
-    short_url = change_url.baiduUrlLongToShort("https://www.baidu.com/cache/sethelp/help.html")
-    long_url =  change_url.baiduUrlShortToLong("http://dwz.cn/2btGVg")
-    print(short_url,long_url)
-    short_url = change_url.sinaUrlLongToShort("https://www.baidu.com/cache/sethelp/help.html")
-    print(short_url)
+    baidu_short_url = change_url.baiduUrlLongToShort("https://www.baidu.com/cache/sethelp/help.html")
+    baidu_long_url =  change_url.baiduUrlShortToLong("http://dwz.cn/2btGVg")
+    print(baidu_short_url,baidu_long_url)
+    sina_short_url = change_url.sinaUrlLongToShort("https://www.baidu.com/cache/sethelp/help.html")
+    sina_long_url = change_url.sinaUrlShortToLong("http://t.cn/RApcXsB")
+    print(sina_short_url,sina_long_url)
+
 
